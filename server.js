@@ -21,7 +21,9 @@ socket.on("gameStart", function(game) {
 // socket.on("getName", function(str) {
 //     name = str;
 // })
+var globalGame;
 socket.on("update", function(game) {
+    globalGame = game;
     // Running Player Created Brain        
     let tempdir = direction(game);
     //EVALUATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeee
@@ -53,21 +55,54 @@ function direction(game) {
     // console.log(enemyBots.length, enemyBots[0])
     // console.log("ENEMYBOTS: " + enemyBots)
     console.log("asking for dir!")
-    return nextStep([game.myBot.pos[1], game.myBot.pos[0]], [Math.floor(Math.random() * 17),Math.floor(Math.random() * 17)]);
+    console.log("EENMY BOTS", enemyBots[0])
+    if(game.myBot.energy >2){
+         return nextStep([game.myBot.pos[1], game.myBot.pos[0]], [1,1]);
+    } else{
+    return nextStep([game.myBot.pos[1], game.myBot.pos[0]], [4,4]);
+    }
     //   return dirs[Math.floor(Math.random() * 4)];
 }
 
 
 
 // return _this.pathDir;
+// function findDistance
+function stepArray(pos1,pos2){
+    var grid = new PF.Grid(20, 20);
+    grid.setWalkableAt(pos1[0], pos1[1], true);
+    grid.setWalkableAt(pos2[0], pos2[1], true);
+    for(let i=0;i<globalGame.barricades.length;i++){
+        grid.setWalkableAt(globalGame.barricades[i][0],globalGame.barricades[i][1],false)
+    }
+    //console.log(pos1[0], pos1[1], pos2[0], pos2[1]);
+    var finder = new PF.AStarFinder();
+    var path = finder.findPath(pos1[0], pos1[1], pos2[0], pos2[1], grid);    
+    return path;    
+}
+function findDistance(pos1, pos2){
+    var grid = new PF.Grid(20, 20);
+    grid.setWalkableAt(pos1[0], pos1[1], true);
+    grid.setWalkableAt(pos2[0], pos2[1], true);
+    for(let i=0;i<globalGame.barricades.length;i++){
+        grid.setWalkableAt(globalGame.barricades[i][0],globalGame.barricades[i][1],false)
+    }
+    //console.log(pos1[0], pos1[1], pos2[0], pos2[1]);
+    var finder = new PF.AStarFinder();
+    var path = finder.findPath(pos1[0], pos1[1], pos2[0], pos2[1], grid);    
+    return path.length;
+}
 function nextStep(pos1, pos2) {
     if (pos1 === undefined || pos2 === undefined) {
         return "none";
     }
     console.log(pos1, pos2)
-    var grid = new PF.Grid(19, 19);
+    var grid = new PF.Grid(20, 20);
     grid.setWalkableAt(pos1[0], pos1[1], true);
     grid.setWalkableAt(pos2[0], pos2[1], true);
+    for(let i=0;i<globalGame.barricades.length;i++){
+        grid.setWalkableAt(globalGame.barricades[i][0],globalGame.barricades[i][1],false)
+    }
     //console.log(pos1[0], pos1[1], pos2[0], pos2[1]);
     var finder = new PF.AStarFinder();
     var path = finder.findPath(pos1[0], pos1[1], pos2[0], pos2[1], grid);
@@ -93,5 +128,6 @@ function nextStep(pos1, pos2) {
                 }
             }
         }
+
     }
 }
