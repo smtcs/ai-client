@@ -28,7 +28,7 @@ socket.on("update", function(game) {
     let tempdir = direction(game);
     //EVALUATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeee
     if (tempdir != undefined) {
-        socket.emit("new direction", { dir: tempdir, "id": game.idTurn });
+        socket.emit("new direction", { dir: tempdir, "id": game.idTurn, "gameId": game.gameId });
     }
 
 
@@ -57,9 +57,9 @@ function direction(game) {
     console.log("asking for dir!")
     console.log("EENMY BOTS", enemyBots[0])
     if(game.myBot.energy >2){
-         return nextStep([game.myBot.pos[1], game.myBot.pos[0]], [1,1]);
+         return nextStep(game.myBot.pos, [1,1]);
     } else{
-    return nextStep([game.myBot.pos[1], game.myBot.pos[0]], [4,4]);
+    return nextStep(game.myBot.pos, [4,4]);
     }
     //   return dirs[Math.floor(Math.random() * 4)];
 }
