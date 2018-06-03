@@ -23,6 +23,22 @@ socket.on("gameStart", function(game) {
 // })
 var globalGame;
 socket.on("update", function(game) {
+    //     console.log("----------------------------------------------")
+    // console.log("\x1b[31m", "  Energy - Base Energy", "\x1b[0m");
+     
+    // console.log("\x1b[31m", "My Bot " +  "\x1b[0m" + game.myBot.energy + " - " + game.bases[game.idTurn].energy);
+    // for(var i=0;i<game.players.length;i++){
+    //     if(i != game.myBot.id){
+    // console.log( "\x1b[31m"  ,"Bot "  +  (i+1)  + "\x1b[0m " + game.myBot.energy + " - " + game.bases[game.idTurn].energy);
+    //     }
+    // }
+    // console.log( "\x1b[33m", "Turn: " + game.turn + "/200", "\x1b[0m")
+    
+    // console.log("----------------------------------------------")
+    
+    
+    
+    
     globalGame = game;
     // Running Player Created Brain        
     let tempdir = direction(game);
@@ -44,7 +60,6 @@ var dirs = ["north", "south", "east", "west", "south", "south"]
 
 
 function direction(game) {
-return "north";
     var enemyBots = [];
     let myDir = "none";
 
@@ -52,15 +67,25 @@ return "north";
     if (game.idTurn != 1) { enemyBots.push(game.players[1]); }
         var closestNode = game.nodes[0];
     for(var i=0;i<game.nodes.length;i++){
-        if(findDistance(game.myBot.pos, game.nodes[i].pos) < findDistance(game.myBot.pos, closestNode.pos)){
-            closestNode = game.nodes[i]
-        }
+if(findDistance(game.myBot.pos, closestNode.pos) > findDistance(game.myBot.pos, game.nodes[i].pos) && game.nodes[i].energy > 5){
+    console.log(game.nodes[i].pos + "  is not   "+ game.mybot.pos)
+    closestNode = game.nodes[i];
+}
     }
     
+ 
+ console.log("MOTHERUFjdanda")
+        console.log();
+        console.log(game.myBot.pos  + "  is? " + closestNode.pos)
+ 
+    console.log("node with most energy! " + closestNode.pos)
 
+ console.log("PLAYER POS " + game.players[game.idTurn].pos + " MYBPT " + game.myBot.pos )
 if(game.turn >=  200 - (findDistance(game.myBot.pos, game.bases[game.idTurn].pos)  * game.players.length )){
     myDir = nextStep(game.myBot.pos, game.bases[game.idTurn].pos);
+    console.log("Goin to base! " + game.bases[game.idTurn].pos  + " im at " + game.myBot.pos  + " and my id is " + game.idTurn);
 } else{
+    console.log("going to closest node~!!!!  " + closestNode.pos + " im at " + game.myBot.pos + " and my id is " + game.idTurn);
     myDir = nextStep(game.myBot.pos, closestNode.pos)
 }
 return myDir;
@@ -93,6 +118,8 @@ function stepArray(pos1, pos2) {
 }
 
 function nextStep(pos1, pos2) {
+    
+    console.log(pos1, pos2)
     if (pos1 === undefined || pos2 === undefined) {
         return "none";
     }
