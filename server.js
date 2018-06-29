@@ -9,36 +9,27 @@ var cnt = 0;
 var socket = require('socket.io-client')('http://aichallenge-gorgamite.c9users.io');
 
 // TODO: Change to botBrain.key property in the future
-var key = "efqom7i9jl";
+var key = "7enhdtntk52";
 // var name = "hello";
 
 socket.emit("name", key);
 
-socket.on("gameStart", function(game) {
 
-})
 
-// socket.on("getName", function(str) {
-//     name = str;
-// })
 var globalGame;
 socket.on("update", function(game) {
-    //     console.log("----------------------------------------------")
-    // console.log("\x1b[31m", "  Energy - Base Energy", "\x1b[0m");
+            console.log("----------------------------------------------")
+    console.log("\x1b[31m", "  Energy - Base Energy", "\x1b[0m");
      
-    // console.log("\x1b[31m", "My Bot " +  "\x1b[0m" + game.myBot.energy + " - " + game.bases[game.idTurn].energy);
-    // for(var i=0;i<game.players.length;i++){
-    //     if(i != game.myBot.id){
-    // console.log( "\x1b[31m"  ,"Bot "  +  (i+1)  + "\x1b[0m " + game.myBot.energy + " - " + game.bases[game.idTurn].energy);
-    //     }
-    // }
-    // console.log( "\x1b[33m", "Turn: " + game.turn + "/200", "\x1b[0m")
+    console.log("\x1b[31m", "My Bot " +  "\x1b[0m" + game.myBot.energy + " - " + game.bases[game.idTurn].energy);
+    for(var i=0;i<game.players.length;i++){
+        if(i != game.myBot.id){
+    console.log( "\x1b[31m"  ,"Bot "  +  (i+1)  + "\x1b[0m " + game.myBot.energy + " - " + game.bases[game.idTurn].energy);
+        }
+    }
+    console.log( "\x1b[33m", "Turn: " + game.turn + "/200", "\x1b[0m")
     
-    // console.log("----------------------------------------------")
-    
-    
-    
-    
+    console.log("----------------------------------------------")
     globalGame = game;
     // Running Player Created Brain        
     let tempdir = direction(game);
@@ -51,42 +42,35 @@ socket.on("update", function(game) {
 
 
 })
-socket.on("queue", function(str) {
-    console.log(str);
-})
 var dirs = ["north", "south", "east", "west", "south", "south"]
 
 // Function Created and Given to Player
 
 
 function direction(game) {
+    var scoreArr = [];
     var enemyBots = [];
     let myDir = "none";
 
     if (game.idTurn != 0) { enemyBots.push(game.players[0]); }
     if (game.idTurn != 1) { enemyBots.push(game.players[1]); }
-        var closestNode = game.nodes[0];
-    for(var i=0;i<game.nodes.length;i++){
-if(findDistance(game.myBot.pos, closestNode.pos) > findDistance(game.myBot.pos, game.nodes[i].pos) && game.nodes[i].energy > 5){
-    console.log(game.nodes[i].pos + "  is not   "+ game.mybot.pos)
-    closestNode = game.nodes[i];
-}
+        for(var i=0;i<game.nodes.length;i++){
+        scoreArr.push(game.nodes[i].energy / findDistance(game.myBot.pos, game.nodes[i].pos))
     }
+let bestNode = game.nodes[0];
+for(var i=0;i<scoreArr.length;i++){
+    if((bestNode.energy / findDistance(game.myBot.pos, bestNode.pos)) <  scoreArr[i]){
+        bestNode = game.nodes[i]
+        
+    }
+}
+ 
     
- 
- console.log("MOTHERUFjdanda")
-        console.log();
-        console.log(game.myBot.pos  + "  is? " + closestNode.pos)
- 
-    console.log("node with most energy! " + closestNode.pos)
 
- console.log("PLAYER POS " + game.players[game.idTurn].pos + " MYBPT " + game.myBot.pos )
-if(game.turn >=  200 - (findDistance(game.myBot.pos, game.bases[game.idTurn].pos)  * game.players.length )){
-    myDir = nextStep(game.myBot.pos, game.bases[game.idTurn].pos);
-    console.log("Goin to base! " + game.bases[game.idTurn].pos  + " im at " + game.myBot.pos  + " and my id is " + game.idTurn);
+if(game.turn >=  game.totalTurns - (findDistance(game.myBot.pos, game.bases[game.idTurn].pos)  * game.players.length )){
+    myDir = nextStep(game.myBot.pos, game.myBase.pos);
 } else{
-    console.log("going to closest node~!!!!  " + closestNode.pos + " im at " + game.myBot.pos + " and my id is " + game.idTurn);
-    myDir = nextStep(game.myBot.pos, closestNode.pos)
+    myDir = nextStep(game.myBot.pos, bestNode.pos)
 }
 return myDir;
 }
@@ -118,8 +102,6 @@ function stepArray(pos1, pos2) {
 }
 
 function nextStep(pos1, pos2) {
-    
-    console.log(pos1, pos2)
     if (pos1 === undefined || pos2 === undefined) {
         return "none";
     }
