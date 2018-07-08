@@ -1,5 +1,5 @@
 let bot = require("./bot");
-bot.key = "7enhdtntk52";
+bot.key = "7enhdtntk52"; //Set your bot key to this string!
 
 bot.direction = function(game) { //ONLY CHANGE THIS FUNCTION
     var scoreArr = [];
@@ -25,26 +25,31 @@ for(var i=0;i<scoreArr.length;i++){
         bestNode = collectArr[i];
     }
 }
- console.log("best node: " +JSON.stringify( bestNode))
     
 //Returns to base before game ends.
 if(game.turn >=  game.totalTurns - (bot.findDistance(game.myBot.pos, game.bases[game.idTurn].pos)  * game.players.length )){
     myDir = bot.nextStep(game.myBot.pos, game.myBase.pos);
 } else{
-    myDir = bot.nextStep(game.myBot.pos, bestNode.pos)
-    console.log("first DIR " + myDir)
     
-    let tempPos = bot.checkPos(myDir, game.myBot.pos)
-for(let i=0;i<enemyBots.length;i++){
-if(tempPos[0] == enemyBots[i].pos[0] && tempPos[1] == enemyBots[i].pos[1] ){
-    if(enemyBots[i].energy < game.myBot.energy + 1){
-    myDir = bot.nextStep(game.myBot.pos, bestNode.pos, enemyBots[i].pos);
-    }
-    break;
-}
-}
+         
+            let avoidArr = [];
+            for(const enemy of enemyBots){
+                   let enemyPos = JSON.parse(JSON.stringify(enemy.pos));
+               avoidArr.push(enemyPos);
+               enemyPos[0]--;
+               avoidArr.push(enemyPos);
+               enemyPos[0]+=2;
+               enemyPos = JSON.parse(JSON.stringify(enemy.pos));
+               avoidArr.push(enemyPos);
+               enemyPos[1]--;
+               avoidArr.push(enemyPos);
+               enemyPos[1] += 2;
+               avoidArr.push(enemyPos);
+             }
+    myDir = bot.nextStep(game.myBot.pos, bestNode.pos, avoidArr);
+    
+    
 }
 return myDir;
-}
-//DO NOT CHANGE ANYTHING BELOW THIS LINE
+} //DO NOT CHANGE ANYTHING BELOW THIS LINE
 bot();

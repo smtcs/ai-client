@@ -14,7 +14,7 @@ bot.socket.on("update", function(game) {
     console.log("\x1b[31m", "My Bot " +  "\x1b[0m" + game.myBot.energy + " - " + game.bases[game.idTurn].energy);
     for(var i=0;i<game.players.length;i++){
         if(i != game.myBot.id){
-    console.log( "\x1b[31m"  ,"Bot "  +  (i+1)  + "\x1b[0m " + game.myBot.energy + " - " + game.bases[game.idTurn].energy);
+    console.log( "\x1b[31m"  ,"Bot "  +  (i+1)  + "\x1b[0m " + game.players[i].energy + " - " + game.bases[i].energy);
         }
     }
     console.log( "\x1b[33m", "Turn: " + game.turn + "/" + game.totalTurns, "\x1b[0m")
@@ -47,7 +47,9 @@ bot.findDistance = function(pos1, pos2, avoidBlock) {
         if(avoidBlock !== undefined && avoidBlock.length > 0){
         if(avoidBlock[0].constructor === Array){
             for(let i=0;i<avoidBlock.length;i++){
+                if(avoidBlock[i][0] < 20 && avoidBlock[i][0] >= 0 && avoidBlock[i][1] < 20 && avoidBlock[i][1] >= 0 ){
                 grid.setWalkableAt(avoidBlock[i][0],avoidBlock[i][1], false);
+                }
             }
         } else{
         grid.setWalkableAt(avoidBlock[0],avoidBlock[1],false);
@@ -70,7 +72,9 @@ bot.stepArray = function(pos1, pos2, avoidBlock) {
         if(avoidBlock !== undefined && avoidBlock.length > 0){
         if(avoidBlock[0].constructor === Array){
             for(let i=0;i<avoidBlock.length;i++){
+                if(avoidBlock[i][0] < 20 && avoidBlock[i][0] >= 0 && avoidBlock[i][1] < 20 && avoidBlock[i][1] >= 0 ){
                 grid.setWalkableAt(avoidBlock[i][0],avoidBlock[i][1], false);
+                }
             }
         } else{
         grid.setWalkableAt(avoidBlock[0],avoidBlock[1],false);
@@ -94,7 +98,9 @@ bot.nextStep = function(pos1, pos2, avoidBlock) {
     if(avoidBlock !== undefined && avoidBlock.length > 0){
         if(avoidBlock[0].constructor === Array){
             for(let i=0;i<avoidBlock.length;i++){
+            if(avoidBlock[i][0] < 20 && avoidBlock[i][0] >= 0 && avoidBlock[i][1] < 20 && avoidBlock[i][1] >= 0 ){
                 grid.setWalkableAt(avoidBlock[i][0],avoidBlock[i][1], false);
+            }
             }
         } else{
         grid.setWalkableAt(avoidBlock[0],avoidBlock[1],false);
@@ -104,11 +110,7 @@ bot.nextStep = function(pos1, pos2, avoidBlock) {
     var path = finder.findPath(pos1[0], pos1[1], pos2[0], pos2[1], grid);
     if (path === null || path === undefined || path.length === 0) {}
     else {
-            if(avoidBlock !== undefined){
-                console.log("path " + path);
-                console.log("error" + path.wimwum)
-            }
-        
+
         if (path[1]) {
             if (path[1][0] === pos1[0]) {
                 if (path[1][1] < pos1[1]) {
