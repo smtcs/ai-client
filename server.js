@@ -18,11 +18,37 @@ let collectArr = game.nodes.concat(game.bases);
         for(var i=0;i<collectArr.length;i++){
         scoreArr.push(collectArr[i].energy / bot.findDistance(game.myBot.pos, collectArr[i].pos))
     }
+
+                let avoidArr = [];
+            for(const enemy of enemyBots){
+                if(enemy.energy <= game.myBot.energy +1){
+                   let enemyPos = JSON.parse(JSON.stringify(enemy.pos));
+               avoidArr.push(enemyPos);
+                   enemyPos = JSON.parse(JSON.stringify(enemy.pos));
+               enemyPos[0]--;
+               avoidArr.push(enemyPos);
+             enemyPos = JSON.parse(JSON.stringify(enemy.pos));
+               enemyPos[0]++;
+               avoidArr.push(enemyPos);
+                 enemyPos = JSON.parse(JSON.stringify(enemy.pos));
+               enemyPos[1]--;
+               avoidArr.push(enemyPos);
+               enemyPos = JSON.parse(JSON.stringify(enemy.pos));
+               enemyPos[1] ++;
+               avoidArr.push(enemyPos);
+                  }
+            }
+            console.log(avoidArr)
+    
+    
+    
     //Calculates most profitable next step
 let bestNode = collectArr[0];
 for(var i=0;i<scoreArr.length;i++){
     if((bestNode.energy / bot.findDistance(game.myBot.pos, bestNode.pos)) <  scoreArr[i]){
+        if(bot.nextStep(game.myBot.pos, collectArr[i].pos, avoidArr) !== undefined){
         bestNode = collectArr[i];
+        }
     }
 }
     
@@ -32,20 +58,7 @@ if(game.turn >=  game.totalTurns - (bot.findDistance(game.myBot.pos, game.bases[
 } else{
     
          
-            let avoidArr = [];
-            for(const enemy of enemyBots){
-                   let enemyPos = JSON.parse(JSON.stringify(enemy.pos));
-               avoidArr.push(enemyPos);
-               enemyPos[0]--;
-               avoidArr.push(enemyPos);
-               enemyPos[0]+=2;
-               enemyPos = JSON.parse(JSON.stringify(enemy.pos));
-               avoidArr.push(enemyPos);
-               enemyPos[1]--;
-               avoidArr.push(enemyPos);
-               enemyPos[1] += 2;
-               avoidArr.push(enemyPos);
-             }
+
     myDir = bot.nextStep(game.myBot.pos, bestNode.pos, avoidArr);
     
     
