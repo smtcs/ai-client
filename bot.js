@@ -25,8 +25,7 @@ bot.socket.on("update", function(game) {
     let tempdir = bot.direction(game);
     console.log(tempdir)
     
-    console.log("Going in this direction! " + tempdir)
-    //EVALUATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeee   
+    console.log("Going in this direction! " + tempdir) 
     if (tempdir != undefined && tempdir != "") {
       bot.socket.emit("new direction", { dir: tempdir, "id": game.idTurn, "gameId": game.gameId });
     }
@@ -52,7 +51,9 @@ bot.findDistance = function(pos1, pos2, avoidBlock) {
                 }
             }
         } else{
+             if(avoidBlock[0] < 20 && avoidBlock[0] >= 0 && avoidBlock[1] < 20 && avoidBlock[1] >= 0 ){
         grid.setWalkableAt(avoidBlock[0],avoidBlock[1],false);
+        }
         }
     }
     var finder = new bot.PF.AStarFinder();
@@ -77,7 +78,9 @@ bot.stepArray = function(pos1, pos2, avoidBlock) {
                 }
             }
         } else{
+             if(avoidBlock[0] < 20 && avoidBlock[0] >= 0 && avoidBlock[1] < 20 && avoidBlock[1] >= 0 ){
         grid.setWalkableAt(avoidBlock[0],avoidBlock[1],false);
+        }
         }
     }
     var finder = new bot.PF.AStarFinder();
@@ -103,7 +106,9 @@ bot.nextStep = function(pos1, pos2, avoidBlock) {
             }
             }
         } else{
+             if(avoidBlock[0] < 20 && avoidBlock[0] >= 0 && avoidBlock[1] < 20 && avoidBlock[1] >= 0 ){
         grid.setWalkableAt(avoidBlock[0],avoidBlock[1],false);
+             }
         }
     }
     var finder = new bot.PF.AStarFinder();
