@@ -20,6 +20,18 @@ for(let i=0;i<game.players.length;i++){ //Adds all other bots to the enemyBots a
 
 
 let collectArr = game.nodes.concat(game.bases);
+
+
+for(let i=0;i<enemyBots.length;i++){
+    var tempPlayer;
+    if(bot.findDistance(game.myBot.pos,enemyBots[i].pos) <= 4 && enemyBots[i].energy > game.myBot.energy){
+        tempPlayer = JSON.parse(JSON.stringify(enemyBots[i]));
+        tempPlayer.energy = (game.myBot.energy - ((enemyBots[i].energy+ game.myBot.energy) /2))
+        collectArr.push(tempPlayer)
+    }
+}
+
+
         for(var i=0;i<collectArr.length;i++){
         scoreArr.push(collectArr[i].energy / bot.findDistance(game.myBot.pos, collectArr[i].pos))
     }
