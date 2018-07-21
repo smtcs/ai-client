@@ -23,7 +23,6 @@ bot.socket.on("update", function(game) {
     globalGame = game;
     // Running Player Created Brain        
     let tempdir = bot.direction(game);
-    console.log(tempdir)
     
     console.log("Going in this direction! " + tempdir) 
     if (tempdir != undefined && tempdir != "") {

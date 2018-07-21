@@ -24,9 +24,9 @@ let collectArr = game.nodes.concat(game.bases);
 
 for(let i=0;i<enemyBots.length;i++){
     var tempPlayer;
-    if(bot.findDistance(game.myBot.pos,enemyBots[i].pos) <= 4 && enemyBots[i].energy > game.myBot.energy){
+    if(enemyBots[i].energy > game.myBot.energy){
         tempPlayer = JSON.parse(JSON.stringify(enemyBots[i]));
-        tempPlayer.energy = (game.myBot.energy - ((enemyBots[i].energy+ game.myBot.energy) /2))
+        tempPlayer.energy = ( ((enemyBots[i].energy+ game.myBot.energy) /2) - game.myBot.energy)
         collectArr.push(tempPlayer)
     }
 }
@@ -55,7 +55,9 @@ for(let i=0;i<enemyBots.length;i++){
                avoidArr.push(enemyPos);
                   }
             }
-            console.log(avoidArr)
+            if(game.myBot.energy > 0){
+            avoidArr.push(game.myBase.pos)
+            }
     
     
     
