@@ -2,14 +2,16 @@ function bot(){
 console.log("Joined Queue! Waiting for game to start...");
 bot.PF = require('pathfinding');
 bot.io = require('socket.io-client');
-bot.socket = require('socket.io-client')('http://aichallenge-gorgamite.c9users.io');
+bot.socket = require('socket.io-client')('http://aichallenge-' + bot.hostC9Name + '.c9users.io');
 bot.socket.emit("name", bot.key);
 
 
 var globalGame;
 bot.socket.on("update", function(game) {
+    
             console.log("----------------------------------------------")
-    console.log("\x1b[31m", "  Energy - Base Energy", "\x1b[0m");
+                console.log("      \x1b[4m%s\x1b[0m", "Game number " + (game.gameId+1));
+    console.log("\x1b[31m", "Energy - Base Energy", "\x1b[0m");
      
     console.log("\x1b[31m", "My Bot " +  "\x1b[0m" + game.myBot.energy + " - " + game.bases[game.idTurn].energy);
     for(var i=0;i<game.players.length;i++){

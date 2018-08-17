@@ -1,8 +1,9 @@
 let bot = require("./bot");
+bot.hostC9Name = 'gorgamite'
 bot.key = "7enhdtntk52"; //Set your bot key to this string!
 
 bot.direction = function(game) { //ONLY CHANGE THIS FUNCTION
-
+console.log(JSON.parse(JSON.stringify(game.myBase)))
     var enemyBots = [];
     var enemyBases = [];
     let myDir = "none";
