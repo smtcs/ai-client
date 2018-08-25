@@ -30,30 +30,62 @@ bot.socket.on("update", function(game) {
     if (tempdir != undefined && tempdir != "") {
       bot.socket.emit("new direction", { dir: tempdir, "id": game.idTurn, "gameId": game.gameId });
     }
+    console.log("avoidA RARR " + JSON.stringify(avoidArr));
+    avoidArr = [];
 
 
 })
 
 
+let avoidArr = [];
 
 
-bot.findDistance = function(pos1, pos2, avoidBlock) {
+bot.clearAvoid = function(){
+    avoidArr = [];
+}
+
+bot.avoid = function(pos){
+    
+                       let enemyPos = JSON.parse(JSON.stringify(pos));
+               avoidArr.push(enemyPos);
+               if(globalGame.myBase.pos[0] != pos[0] && globalGame.myBase.pos[1] != pos[1] ){
+                   enemyPos = JSON.parse(JSON.stringify(pos));
+               enemyPos[0]--;
+               avoidArr.push(enemyPos);
+             enemyPos = JSON.parse(JSON.stringify(pos));
+               enemyPos[0]++;
+               avoidArr.push(enemyPos);
+                 enemyPos = JSON.parse(JSON.stringify(pos));
+               enemyPos[1]--;
+               avoidArr.push(enemyPos);
+               enemyPos = JSON.parse(JSON.stringify(pos));
+               enemyPos[1] ++;
+               avoidArr.push(enemyPos);
+}
+}
+
+
+
+bot.findDistance = function(pos1, pos2, avoidBlocks) {
     var grid = new bot.PF.Grid(20, 20);
     grid.setWalkableAt(pos1[0], pos1[1], true);
     grid.setWalkableAt(pos2[0], pos2[1], true);
     for (let i = 0; i < globalGame.barricades.length; i++) {
         grid.setWalkableAt(globalGame.barricades[i][0], globalGame.barricades[i][1], false)
     }
-        if(avoidBlock !== undefined && avoidBlock.length > 0){
-        if(avoidBlock[0].constructor === Array){
-            for(let i=0;i<avoidBlock.length;i++){
-                if(avoidBlock[i][0] < 20 && avoidBlock[i][0] >= 0 && avoidBlock[i][1] < 20 && avoidBlock[i][1] >= 0 ){
-                grid.setWalkableAt(avoidBlock[i][0],avoidBlock[i][1], false);
+    if(avoidBlocks != false){
+        if(avoidArr !== undefined && avoidArr.length > 0){
+        if(avoidArr[0].constructor === Array){
+            for(let i=0;i<avoidArr.length;i++){
+                if(avoidArr[i][0] < 20 && avoidArr[i][0] >= 0 && avoidArr[i][1] < 20 && avoidArr[i][1] >= 0 ){
+                grid.setWalkableAt(avoidArr[i][0],avoidArr[i][1], false);
                 }
             }
+        
         } else{
-             if(avoidBlock[0] < 20 && avoidBlock[0] >= 0 && avoidBlock[1] < 20 && avoidBlock[1] >= 0 ){
-        grid.setWalkableAt(avoidBlock[0],avoidBlock[1],false);
+             if(avoidArr[0] < 20 && avoidArr[0] >= 0 && avoidArr[1] < 20 && avoidArr[1] >= 0 ){
+        grid.setWalkableAt(avoidArr[0],avoidArr[1],false);
+        }
         }
         }
     }
@@ -64,23 +96,25 @@ bot.findDistance = function(pos1, pos2, avoidBlock) {
 
 
 
-bot.stepArray = function(pos1, pos2, avoidBlock) {
+bot.stepArray = function(pos1, pos2, avoidBlocks) {
     var grid = new bot.PF.Grid(20, 20);
     grid.setWalkableAt(pos1[0], pos1[1], true);
     grid.setWalkableAt(pos2[0], pos2[1], true);
     for (let i = 0; i < globalGame.barricades.length; i++) {
         grid.setWalkableAt(globalGame.barricades[i][0], globalGame.barricades[i][1], false)
     }
-        if(avoidBlock !== undefined && avoidBlock.length > 0){
-        if(avoidBlock[0].constructor === Array){
-            for(let i=0;i<avoidBlock.length;i++){
-                if(avoidBlock[i][0] < 20 && avoidBlock[i][0] >= 0 && avoidBlock[i][1] < 20 && avoidBlock[i][1] >= 0 ){
-                grid.setWalkableAt(avoidBlock[i][0],avoidBlock[i][1], false);
+        if(avoidBlocks != false){
+        if(avoidArr !== undefined && avoidArr.length > 0){
+        if(avoidArr[0].constructor === Array){
+            for(let i=0;i<avoidArr.length;i++){
+                if(avoidArr[i][0] < 20 && avoidArr[i][0] >= 0 && avoidArr[i][1] < 20 && avoidArr[i][1] >= 0 ){
+                grid.setWalkableAt(avoidArr[i][0],avoidArr[i][1], false);
                 }
             }
         } else{
-             if(avoidBlock[0] < 20 && avoidBlock[0] >= 0 && avoidBlock[1] < 20 && avoidBlock[1] >= 0 ){
-        grid.setWalkableAt(avoidBlock[0],avoidBlock[1],false);
+             if(avoidArr[0] < 20 && avoidArr[0] >= 0 && avoidArr[1] < 20 && avoidArr[1] >= 0 ){
+        grid.setWalkableAt(avoidArr[0],avoidArr[1],false);
+        }
         }
         }
     }
@@ -89,7 +123,7 @@ bot.stepArray = function(pos1, pos2, avoidBlock) {
     return path;
 }
 
-bot.nextStep = function(pos1, pos2, avoidBlock) {
+bot.nextStep = function(pos1, pos2, avoidBlocks) {
     if (pos1 === undefined || pos2 === undefined) {
         return "none";
     }
@@ -99,17 +133,19 @@ bot.nextStep = function(pos1, pos2, avoidBlock) {
     for (let i = 0; i < globalGame.barricades.length; i++) {
         grid.setWalkableAt(globalGame.barricades[i][0], globalGame.barricades[i][1], false)
     }
-    if(avoidBlock !== undefined && avoidBlock.length > 0){
-        if(avoidBlock[0].constructor === Array){
-            for(let i=0;i<avoidBlock.length;i++){
-            if(avoidBlock[i][0] < 20 && avoidBlock[i][0] >= 0 && avoidBlock[i][1] < 20 && avoidBlock[i][1] >= 0 ){
-                grid.setWalkableAt(avoidBlock[i][0],avoidBlock[i][1], false);
+        if(avoidBlocks != false){
+    if(avoidArr !== undefined && avoidArr.length > 0){
+        if(avoidArr[0].constructor === Array){
+            for(let i=0;i<avoidArr.length;i++){
+            if(avoidArr[i][0] < 20 && avoidArr[i][0] >= 0 && avoidArr[i][1] < 20 && avoidArr[i][1] >= 0 ){
+                grid.setWalkableAt(avoidArr[i][0],avoidArr[i][1], false);
             }
             }
         } else{
-             if(avoidBlock[0] < 20 && avoidBlock[0] >= 0 && avoidBlock[1] < 20 && avoidBlock[1] >= 0 ){
-        grid.setWalkableAt(avoidBlock[0],avoidBlock[1],false);
+             if(avoidArr[0] < 20 && avoidArr[0] >= 0 && avoidArr[1] < 20 && avoidArr[1] >= 0 ){
+        grid.setWalkableAt(avoidArr[0],avoidArr[1],false);
              }
+        }
         }
     }
     var finder = new bot.PF.AStarFinder();
@@ -150,7 +186,6 @@ bot.checkPos = function(dirStr, pos){
     } else if(dirStr == "west"){
         tempPosVar[0]--;
     }
-    console.log("checkpos " + tempPosVar)
     return tempPosVar;
     
 }

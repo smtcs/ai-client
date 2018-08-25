@@ -37,27 +37,13 @@ for(let i=0;i<enemyBots.length;i++){
         scoreArr.push(collectArr[i].energy / bot.findDistance(game.myBot.pos, collectArr[i].pos))
     }
 
-                let avoidArr = [];
             for(const enemy of enemyBots){
                 if(enemy.energy <= game.myBot.energy +1){
-                   let enemyPos = JSON.parse(JSON.stringify(enemy.pos));
-               avoidArr.push(enemyPos);
-                   enemyPos = JSON.parse(JSON.stringify(enemy.pos));
-               enemyPos[0]--;
-               avoidArr.push(enemyPos);
-             enemyPos = JSON.parse(JSON.stringify(enemy.pos));
-               enemyPos[0]++;
-               avoidArr.push(enemyPos);
-                 enemyPos = JSON.parse(JSON.stringify(enemy.pos));
-               enemyPos[1]--;
-               avoidArr.push(enemyPos);
-               enemyPos = JSON.parse(JSON.stringify(enemy.pos));
-               enemyPos[1] ++;
-               avoidArr.push(enemyPos);
+bot.avoid(enemy.pos);
                   }
             }
             if(game.myBot.energy > 0){
-            avoidArr.push(game.myBase.pos)
+ bot.avoid(game.myBase.pos);
             }
     
     
@@ -66,20 +52,20 @@ for(let i=0;i<enemyBots.length;i++){
 let bestNode = collectArr[0];
 for(var i=0;i<scoreArr.length;i++){
     if((bestNode.energy / bot.findDistance(game.myBot.pos, bestNode.pos)) <  scoreArr[i]){
-        if(bot.nextStep(game.myBot.pos, collectArr[i].pos, avoidArr) !== undefined){
+        if(bot.nextStep(game.myBot.pos, collectArr[i].pos) !== undefined){
         bestNode = collectArr[i];
         }
     }
 }
     
 //Returns to base before game ends.
-if(game.turn >=  game.totalTurns - (bot.findDistance(game.myBot.pos, game.bases[game.myBot.id].pos)  * game.players.length )){
-    myDir = bot.nextStep(game.myBot.pos, game.myBase.pos);
+if(game.turn >=  game.totalTurns - (bot.findDistance(game.myBot.pos, game.bases[game.myBot.id].pos, false)  * game.players.length )){
+    myDir = bot.nextStep(game.myBot.pos, game.myBase.pos, false);
 } else{
     
          
 
-    myDir = bot.nextStep(game.myBot.pos, bestNode.pos, avoidArr);
+    myDir = bot.nextStep(game.myBot.pos, bestNode.pos);
     
     
     
