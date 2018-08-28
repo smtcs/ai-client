@@ -1,9 +1,9 @@
-let bot = require("./bot");
-bot.hostC9Name = 'gorgamite'
+let bot = require("./bot"); //Don't change this
+bot.hostURL = 'http://aichallenge-gorgamite.c9users.io'; //Put the server url/IP adress here!
 bot.key = "7enhdtntk52"; //Set your bot key to this string!
-
-bot.direction = function(game) { //ONLY CHANGE THIS FUNCTION
-console.log(JSON.parse(JSON.stringify(game.myBase)))
+/***************************************************/
+//Write your code in this function!!!
+bot.direction = function(game) {
     var enemyBots = [];
     var enemyBases = [];
     let myDir = "none";
@@ -38,7 +38,7 @@ for(let i=0;i<enemyBots.length;i++){
     }
 
             for(const enemy of enemyBots){
-                if(enemy.energy <= game.myBot.energy +1){
+                if(enemy.energy < game.myBot.energy + 1){
 bot.avoid(enemy.pos);
                   }
             }

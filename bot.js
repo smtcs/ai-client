@@ -2,7 +2,7 @@ function bot(){
 console.log("Joined Queue! Waiting for game to start...");
 bot.PF = require('pathfinding');
 bot.io = require('socket.io-client');
-bot.socket = require('socket.io-client')('http://aichallenge-' + bot.hostC9Name + '.c9users.io');
+bot.socket = require('socket.io-client')(bot.hostURL);
 bot.socket.emit("name", bot.key);
 
 
