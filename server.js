@@ -13,7 +13,7 @@ bot.direction = function(game) {
     for (let i = 0; i < game.players.length; i++) { //Adds all other bots to the enemyBots array.
         if (game.players[i].id != game.myBot.id) {
             enemyBases.push(game.bases[i]); //Adds all other bases to the enemyBases array
-            enemyBots.push(game.players[i])
+            enemyBots.push(game.players[i]);
         }
     }
 
@@ -40,8 +40,12 @@ bot.direction = function(game) {
         }
     }
     if (game.myBot.energy > 0) {
-        bot.avoid(game.myBase.pos);
+        for(let i=0;i<game.bases.length;i++){
+            bot.avoid(game.bases[i].pos);
+        }
+        // bot.avoid(game.myBase.pos);
     }
+    
 
     //Calculates most profitable next step
     let bestNode = collectArr[0];
