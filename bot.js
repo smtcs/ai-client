@@ -6,11 +6,15 @@ bot.socket = require('socket.io-client')(bot.hostURL);
 bot.socket.emit("name", bot.key);
 
 
+bot.socket.on("heartbeat", function(data){
+    bot.socket.emit("heartbeat", bot.key);
+})
+
 var globalGame;
 bot.socket.on("update", function(game) {
     
-            console.log("----------------------------------------------")
-                console.log("      \x1b[4m%s\x1b[0m", "Game number " + (game.gameId+1));
+    console.log("----------------------------------------------")
+    console.log("      \x1b[4m%s\x1b[0m", "Game number " + (game.gameId+1));
     console.log("\x1b[31m", "Energy - Base Energy", "\x1b[0m");
      
     console.log("\x1b[31m", "My Bot " +  "\x1b[0m" + game.myBot.energy + " - " + game.bases[game.idTurn].energy);
@@ -25,12 +29,10 @@ bot.socket.on("update", function(game) {
     globalGame = game;
     // Running Player Created Brain        
     let tempdir = bot.direction(game);
-    
     console.log("Going in this direction! " + tempdir) 
     if (tempdir != undefined && tempdir != "") {
       bot.socket.emit("new direction", { dir: tempdir, "id": game.idTurn, "gameId": game.gameId });
     }
-    console.log("avoidA RARR " + JSON.stringify(avoidArr));
     avoidArr = [];
 
 
@@ -189,10 +191,6 @@ bot.checkPos = function(dirStr, pos){
     return tempPosVar;
     
 }
-
-
-
-
 
 }
 module.exports = bot;
